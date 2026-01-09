@@ -57,6 +57,7 @@ export async function createPost(formData: FormData): Promise<CreatePostResult> 
 
     // Targeted revalidation
     revalidatePath("/blog");
+    revalidatePath(`/blog/${slug}`);
 
     return { success: true, slug };
   } catch (error) {

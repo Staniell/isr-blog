@@ -205,14 +205,10 @@ export default function BlogPost({ post, isOwner }: BlogPostProps) {
             <Button
               variant="outline"
               size="lg"
-              className="group px-8"
-              style={{
-                borderColor: "var(--accent)",
-                color: "var(--text-primary)",
-              }}
+              className="group px-8 bg-transparent border-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--accent)] hover:bg-[var(--bg-secondary)] transition-all duration-300"
             >
               <motion.span
-                className="mr-2 inline-block"
+                className="mr-2 inline-block text-[var(--accent)]"
                 whileHover={{ x: -3 }}
                 transition={{ type: "spring", stiffness: 400 }}
               >

@@ -1,7 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,49 +20,123 @@ import { Textarea } from "@/components/ui/textarea";
 import { createPost } from "@/actions/blog";
 import { uploadImage } from "@/actions/image";
 
+// Zod validation schema
+const postSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  slug: z
+    .string()
+    .min(3, "Slug must be at least 3 characters")
+    .regex(/^[a-z0-9-]+$/, "Slug can only contain lowercase letters, numbers, and hyphens"),
+  excerpt: z.string().optional(),
+  content: z.string().min(10, "Content must be at least 10 characters"),
+});
+
+type PostFormData = z.infer<typeof postSchema>;
+
+// Helper: generate slug from title
+function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+}
+
 export default function CreatePostModal() {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
   const router = useRouter();
 
-  // Form states
-  const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
-  const [excerpt, setExcerpt] = useState("");
-  const [content, setContent] = useState("");
-  const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<PostFormData>({
+    resolver: zodResolver(postSchema),
+    defaultValues: {
+      title: "",
+      slug: "",
+      excerpt: "",
+      content: "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Watch title for auto-slug generation
+  const watchedTitle = watch("title");
+
+  useEffect(() => {
+    if (!slugManuallyEdited && watchedTitle) {
+      setValue("slug", generateSlug(watchedTitle));
+    }
+  }, [watchedTitle, slugManuallyEdited, setValue]);
+
+  const onSubmit = async (data: PostFormData) => {
     setIsLoading(true);
-    setError(null);
+    setServerError(null);
 
     try {
+      // Upload cover image if provided
+      let coverImageUrl: string | null = null;
+      if (coverImageFile) {
+        const imageFormData = new FormData();
+        imageFormData.append("file", coverImageFile);
+        const uploadResult = await uploadImage(imageFormData);
+        if (!uploadResult.success) {
+          setServerError(uploadResult.error || "Image upload failed");
+          setIsLoading(false);
+          return;
+        }
+        coverImageUrl = uploadResult.imageUrl || null;
+      }
+
+      // Create post with form data
       const formData = new FormData();
-      formData.append("title", title);
-      formData.append("slug", slug);
-      formData.append("excerpt", excerpt);
-      formData.append("content", content);
+      formData.append("title", data.title);
+      formData.append("slug", data.slug);
+      formData.append("excerpt", data.excerpt || "");
+      formData.append("content", data.content);
+      if (coverImageUrl) {
+        formData.append("coverImage", coverImageUrl);
+      }
 
-      await createPost(formData);
+      const result = await createPost(formData);
 
-      setOpen(false);
-      setTitle("");
-      setSlug("");
-      setExcerpt("");
-      setContent("");
-      setCoverImageFile(null);
-      router.refresh();
+      if (result.success) {
+        setOpen(false);
+        reset();
+        setCoverImageFile(null);
+        setSlugManuallyEdited(false);
+        router.refresh();
+      } else {
+        setServerError(result.error || "Failed to create post.");
+      }
     } catch (err: any) {
-      setError(err.message || "Something went wrong.");
+      setServerError(err.message || "Something went wrong.");
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Reset form when modal closes
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      reset();
+      setCoverImageFile(null);
+      setSlugManuallyEdited(false);
+      setServerError(null);
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="default" className="bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-white border-0">
           Create Post
@@ -72,10 +149,13 @@ export default function CreatePostModal() {
             Write a new blog post. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          {error && (
-            <div className="bg-red-500/15 text-red-500 text-sm p-3 rounded-md border border-red-500/20">{error}</div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
+          {serverError && (
+            <div className="bg-red-500/15 text-red-500 text-sm p-3 rounded-md border border-red-500/20">
+              {serverError}
+            </div>
           )}
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="title" className="text-[var(--text-primary)]">
@@ -83,12 +163,11 @@ export default function CreatePostModal() {
               </Label>
               <Input
                 id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                {...register("title")}
                 placeholder="Enter post title..."
                 className="bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
-                required
               />
+              {errors.title && <p className="text-red-500 text-xs">{errors.title.message}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="slug" className="text-[var(--text-primary)]">
@@ -96,12 +175,13 @@ export default function CreatePostModal() {
               </Label>
               <Input
                 id="slug"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
+                {...register("slug", {
+                  onChange: () => setSlugManuallyEdited(true),
+                })}
                 placeholder="my-new-post"
                 className="bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
-                required
               />
+              {errors.slug && <p className="text-red-500 text-xs">{errors.slug.message}</p>}
             </div>
           </div>
 
@@ -111,8 +191,7 @@ export default function CreatePostModal() {
             </Label>
             <Textarea
               id="excerpt"
-              value={excerpt}
-              onChange={(e) => setExcerpt(e.target.value)}
+              {...register("excerpt")}
               placeholder="Short summary..."
               className="h-20 bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
             />
@@ -124,12 +203,11 @@ export default function CreatePostModal() {
             </Label>
             <Textarea
               id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
+              {...register("content")}
               placeholder="# Hello World"
               className="h-40 font-mono bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
-              required
             />
+            {errors.content && <p className="text-red-500 text-xs">{errors.content.message}</p>}
           </div>
 
           <div className="space-y-2">
@@ -143,13 +221,14 @@ export default function CreatePostModal() {
               className="bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)] file:text-[var(--text-primary)] file:bg-[var(--bg-primary)] file:border-[var(--bg-secondary)]"
               onChange={(e) => setCoverImageFile(e.target.files?.[0] || null)}
             />
+            {coverImageFile && <p className="text-xs text-[var(--text-secondary)]">Selected: {coverImageFile.name}</p>}
           </div>
 
           <div className="flex justify-end gap-2 pt-4">
             <Button
               type="button"
               variant="ghost"
-              onClick={() => setOpen(false)}
+              onClick={() => handleOpenChange(false)}
               className="text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]"
             >
               Cancel

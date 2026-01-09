@@ -29,11 +29,7 @@ export default function Home() {
           <Link href="/blog">
             <Button
               size="lg"
-              className="px-8 text-lg"
-              style={{
-                backgroundColor: "var(--accent)",
-                color: "var(--bg-primary)",
-              }}
+              className="px-8 text-lg bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-white border-0 transition-all duration-300 shadow-lg shadow-[var(--accent)]/20"
             >
               Read the Blog
             </Button>
