@@ -30,7 +30,7 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
         className="h-full"
       >
         <Card
-          className="h-full overflow-hidden cursor-pointer group border-2 transition-colors duration-200"
+          className="h-full overflow-hidden cursor-pointer group border-2 transition-colors duration-200 flex flex-col p-0 gap-0"
           style={{
             backgroundColor: "var(--bg-secondary)",
             borderColor: "transparent",
@@ -38,7 +38,7 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
         >
           {/* Cover Image */}
           {coverImageUrl && (
-            <div className="relative h-48 overflow-hidden">
+            <div className="relative h-48 w-full overflow-hidden shrink-0">
               <motion.img
                 src={coverImageUrl}
                 alt={post.title}
@@ -53,7 +53,7 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
           {/* Placeholder when no image */}
           {!coverImageUrl && (
             <div
-              className="h-48 flex items-center justify-center relative overflow-hidden"
+              className="h-48 w-full flex items-center justify-center relative overflow-hidden shrink-0"
               style={{
                 background: `linear-gradient(135deg, var(--accent) 0%, var(--bg-secondary) 100%)`,
               }}
@@ -62,51 +62,53 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
             </div>
           )}
 
-          <CardHeader className="pb-2">
-            <h2
-              className="text-xl font-semibold line-clamp-2 group-hover:underline decoration-2 underline-offset-2"
-              style={{ color: "var(--text-primary)" }}
-            >
-              {post.title}
-            </h2>
-          </CardHeader>
+          <div className="flex flex-col grow pt-4 pb-4">
+            <CardHeader className="pb-2">
+              <h2
+                className="text-xl font-semibold line-clamp-2 group-hover:underline decoration-2 underline-offset-2"
+                style={{ color: "var(--text-primary)" }}
+              >
+                {post.title}
+              </h2>
+            </CardHeader>
 
-          <CardContent className="pb-2">
-            {post.excerpt && (
-              <p className="line-clamp-3 text-sm" style={{ color: "var(--text-secondary)" }}>
-                {post.excerpt}
-              </p>
-            )}
-          </CardContent>
+            <CardContent className="pb-2 grow">
+              {post.excerpt && (
+                <p className="line-clamp-3 text-sm" style={{ color: "var(--text-secondary)" }}>
+                  {post.excerpt}
+                </p>
+              )}
+            </CardContent>
 
-          <CardFooter className="pt-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src={post.author.image ?? undefined} />
-                <AvatarFallback
-                  style={{
-                    backgroundColor: "var(--accent)",
-                    color: "var(--bg-primary)",
-                  }}
-                >
-                  {post.author.name?.charAt(0)?.toUpperCase() || "?"}
-                </AvatarFallback>
-              </Avatar>
-              <span className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
-                {post.author.name || "Anonymous"}
-              </span>
-            </div>
-            <Badge
-              variant="secondary"
-              className="text-xs"
-              style={{
-                backgroundColor: "var(--bg-primary)",
-                color: "var(--text-secondary)",
-              }}
-            >
-              {formattedDate}
-            </Badge>
-          </CardFooter>
+            <CardFooter className="pt-4 flex items-center justify-between mt-auto">
+              <div className="flex items-center gap-2">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={post.author.image ?? undefined} />
+                  <AvatarFallback
+                    style={{
+                      backgroundColor: "var(--accent)",
+                      color: "var(--bg-primary)",
+                    }}
+                  >
+                    {post.author.name?.charAt(0)?.toUpperCase() || "?"}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>
+                  {post.author.name || "Anonymous"}
+                </span>
+              </div>
+              <Badge
+                variant="secondary"
+                className="text-xs"
+                style={{
+                  backgroundColor: "var(--bg-primary)",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                {formattedDate}
+              </Badge>
+            </CardFooter>
+          </div>
         </Card>
       </motion.div>
     </Link>

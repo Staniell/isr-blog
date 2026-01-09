@@ -58,7 +58,8 @@ export async function createPost(formData: FormData): Promise<CreatePostResult> 
     // Targeted revalidation
     revalidatePath("/blog");
     revalidatePath(`/blog/${slug}`);
-    revalidateTag("published-posts", { expire: 0 }); // Immediately expire cache
+    revalidateTag("published-posts", { expire: 0 }); // Bust list cache
+    revalidateTag(`post-${slug}`, { expire: 0 }); // Bust individual post cache
 
     return { success: true, slug };
   } catch (error) {
@@ -114,7 +115,8 @@ export async function updatePost(postId: string, formData: FormData): Promise<Up
     // Targeted revalidation
     revalidatePath("/blog");
     revalidatePath(`/blog/${post.slug}`);
-    revalidateTag("published-posts", { expire: 0 });
+    revalidateTag("published-posts", { expire: 0 }); // Bust list cache
+    revalidateTag(`post-${post.slug}`, { expire: 0 }); // Bust individual post cache
 
     return { success: true };
   } catch (error) {

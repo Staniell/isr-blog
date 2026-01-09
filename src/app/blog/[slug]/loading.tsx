@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function BlogPostLoading() {
   return (
-    <article className="min-h-screen" style={{ backgroundColor: "var(--bg-primary)" }}>
+    <article className="min-h-screen bg-(--bg-primary)">
       {/* Hero Skeleton */}
       <Skeleton className="h-[60vh] w-full" />
 

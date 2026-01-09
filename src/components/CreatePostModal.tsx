@@ -138,14 +138,14 @@ export default function CreatePostModal() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="default" className="bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-white border-0">
+        <Button variant="default" className="bg-accent hover:bg-accent/90 text-white border-0">
           Create Post
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto bg-[var(--bg-primary)] border-[var(--bg-secondary)] text-[var(--text-primary)]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto bg-(--bg-primary) border-(--bg-secondary) text-(--text-primary)">
         <DialogHeader>
           <DialogTitle>Create New Post</DialogTitle>
-          <DialogDescription className="text-[var(--text-secondary)]">
+          <DialogDescription className="text-(--text-secondary)">
             Write a new blog post. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
@@ -158,19 +158,19 @@ export default function CreatePostModal() {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-[var(--text-primary)]">
+              <Label htmlFor="title" className="text-(--text-primary)">
                 Title
               </Label>
               <Input
                 id="title"
                 {...register("title")}
                 placeholder="Enter post title..."
-                className="bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
+                className="bg-(--bg-secondary) border-transparent text-(--text-primary) placeholder:text-(--text-secondary)"
               />
               {errors.title && <p className="text-red-500 text-xs">{errors.title.message}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="slug" className="text-[var(--text-primary)]">
+              <Label htmlFor="slug" className="text-(--text-primary)">
                 Slug (URL)
               </Label>
               <Input
@@ -179,49 +179,49 @@ export default function CreatePostModal() {
                   onChange: () => setSlugManuallyEdited(true),
                 })}
                 placeholder="my-new-post"
-                className="bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
+                className="bg-(--bg-secondary) border-transparent text-(--text-primary) placeholder:text-(--text-secondary)"
               />
               {errors.slug && <p className="text-red-500 text-xs">{errors.slug.message}</p>}
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="excerpt" className="text-[var(--text-primary)]">
+            <Label htmlFor="excerpt" className="text-(--text-primary)">
               Excerpt
             </Label>
             <Textarea
               id="excerpt"
               {...register("excerpt")}
               placeholder="Short summary..."
-              className="h-20 bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
+              className="h-20 bg-(--bg-secondary) border-transparent text-(--text-primary) placeholder:text-(--text-secondary)"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="content" className="text-[var(--text-primary)]">
+            <Label htmlFor="content" className="text-(--text-primary)">
               Content (Markdown)
             </Label>
             <Textarea
               id="content"
               {...register("content")}
               placeholder="# Hello World"
-              className="h-40 font-mono bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
+              className="h-40 font-mono bg-(--bg-secondary) border-transparent text-(--text-primary) placeholder:text-(--text-secondary)"
             />
             {errors.content && <p className="text-red-500 text-xs">{errors.content.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="coverImage" className="text-[var(--text-primary)]">
+            <Label htmlFor="coverImage" className="text-(--text-primary)">
               Cover Image
             </Label>
             <Input
               id="coverImage"
               type="file"
               accept="image/*"
-              className="bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)] file:text-[var(--text-primary)] file:bg-[var(--bg-primary)] file:border-[var(--bg-secondary)]"
+              className="bg-(--bg-secondary) border-transparent text-(--text-primary) file:text-(--text-primary) file:bg-(--bg-primary) file:border-(--bg-secondary)"
               onChange={(e) => setCoverImageFile(e.target.files?.[0] || null)}
             />
-            {coverImageFile && <p className="text-xs text-[var(--text-secondary)]">Selected: {coverImageFile.name}</p>}
+            {coverImageFile && <p className="text-xs text-(--text-secondary)">Selected: {coverImageFile.name}</p>}
           </div>
 
           <div className="flex justify-end gap-2 pt-4">
@@ -229,15 +229,11 @@ export default function CreatePostModal() {
               type="button"
               variant="ghost"
               onClick={() => handleOpenChange(false)}
-              className="text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]"
+              className="text-(--text-primary) hover:bg-(--bg-secondary) hover:text-(--text-primary)"
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-white"
-            >
+            <Button type="submit" disabled={isLoading} className="bg-accent hover:bg-accent/90 text-white">
               {isLoading ? "Creating..." : "Create Post"}
             </Button>
           </div>
