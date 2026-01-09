@@ -213,7 +213,26 @@ Add inline script in layout BEFORE body content:
 />
 ```
 
-**CRITICAL:** Theme state must NEVER affect SSG/ISR caching.
+#### Theme Consistency for Custom UI
+
+All custom UI components (especially Modals, Dialogs, and Popovers) MUST explicitly use theme CSS variables to ensure consistency across the 4-theme system.
+
+**Requirements:**
+
+- **Dialog Content**: Must use `bg-[var(--bg-primary)]`, `border-[var(--bg-secondary)]`, and `text-[var(--text-primary)]`.
+- **Labels**: Must use `text-[var(--text-primary)]`.
+- **Inputs/Textareas**: Must use `bg-[var(--bg-secondary)]`, `border-transparent`, `text-[var(--text-primary)]`, and `placeholder:text-[var(--text-secondary)]`.
+- **Buttons (Ghost)**: Must explicitly set `text-[var(--text-primary)]` and `hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]` for consistent visibility.
+- **Buttons (Action)**: High-priority actions should use `bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-white`.
+
+**Example Pattern:**
+
+```tsx
+<DialogContent className="bg-[var(--bg-primary)] border-[var(--bg-secondary)] text-[var(--text-primary)]">
+  <Label className="text-[var(--text-primary)]">Title</Label>
+  <Input className="bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)]" />
+</DialogContent>
+```
 
 ---
 

@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import Link from "next/link";
+import Image from "next/image";
+import NavbarActions from "@/components/NavbarActions";
+import { auth } from "@/lib/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,11 +22,13 @@ export const metadata: Metadata = {
   description: "A production-grade blog with Next.js 16, Prisma, and ISR",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -48,30 +53,35 @@ export default function RootLayout({
         style={{ backgroundColor: "var(--bg-primary)" }}
       >
         {/* Header */}
-        <header
-          className="sticky top-0 z-50 border-b backdrop-blur-sm"
-          style={{
-            backgroundColor: "var(--bg-primary)",
-            borderColor: "var(--bg-secondary)",
-          }}
-        >
+        <header className="sticky top-0 z-50 transition-all duration-300 backdrop-blur-md bg-transparent border-b border-white/5">
           <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-            <Link
-              href="/"
-              className="text-xl font-bold hover:opacity-80 transition-opacity"
-              style={{ color: "var(--text-primary)" }}
-            >
-              ISR Blog
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="rounded-lg p-1 transition-all group-hover:bg-white/5">
+                <Image
+                  src="/images/logo.png"
+                  alt="ISR"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6 object-contain invert dark:invert-0"
+                />
+              </div>
+              <span
+                className="text-lg font-bold tracking-tight opacity-90 group-hover:opacity-100 transition-opacity"
+                style={{ color: "var(--text-primary)" }}
+              >
+                ISR
+              </span>
             </Link>
             <nav className="flex items-center gap-6">
               <Link
                 href="/blog"
-                className="text-sm font-medium hover:opacity-80 transition-opacity"
+                className="text-sm font-medium hover:text-[var(--accent)] transition-colors opacity-80 hover:opacity-100"
                 style={{ color: "var(--text-secondary)" }}
               >
                 Blog
               </Link>
               <ThemeSwitcher />
+              <NavbarActions session={session} />
             </nav>
           </div>
         </header>
@@ -81,15 +91,27 @@ export default function RootLayout({
 
         {/* Footer */}
         <footer
-          className="border-t py-8"
+          className="border-t py-6"
           style={{
-            backgroundColor: "var(--bg-secondary)",
+            backgroundColor: "transparent",
             borderColor: "var(--bg-secondary)",
           }}
         >
-          <div className="container mx-auto px-4 text-center">
-            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              Built with Next.js 16, Prisma, and ISR
+          <div className="container mx-auto px-4 flex flex-col items-center gap-4">
+            <div className="flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity">
+              <Image
+                src="/images/logo.png"
+                alt="ISR"
+                width={16}
+                height={16}
+                className="w-4 h-4 object-contain invert dark:invert-0"
+              />
+              <span className="font-medium text-xs tracking-wider uppercase" style={{ color: "var(--text-primary)" }}>
+                ISR Blog
+              </span>
+            </div>
+            <p className="text-xs font-light text-center" style={{ color: "var(--text-secondary)" }}>
+              &copy; {new Date().getFullYear()} ISR Blog. All rights reserved.
             </p>
           </div>
         </footer>

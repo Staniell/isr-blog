@@ -4,6 +4,7 @@ export const revalidate = 3600;
 import { notFound } from "next/navigation";
 import { getPostBySlug, getAllPostSlugs } from "@/lib/blog";
 import BlogPost from "@/components/BlogPost";
+import { auth } from "@/lib/auth";
 
 export async function generateStaticParams() {
   const posts = await getAllPostSlugs();
@@ -18,5 +19,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     notFound();
   }
 
-  return <BlogPost post={post} />;
+  const session = await auth();
+  const isOwner = session?.user?.id === post.authorId;
+
+  return <BlogPost post={post} isOwner={isOwner} />;
 }

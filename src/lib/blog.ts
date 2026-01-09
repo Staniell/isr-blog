@@ -22,6 +22,7 @@ export type BlogPost = {
   coverImage: string | null;
   createdAt: Date;
   updatedAt: Date;
+  authorId: string;
   author: { name: string | null; image: string | null };
 };
 
@@ -67,6 +68,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
           coverImage: true,
           createdAt: true,
           updatedAt: true,
+          authorId: true,
           author: { select: { name: true, image: true } },
         },
       });

@@ -7,17 +7,52 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { getImageUrl } from "@/lib/cdn";
 import type { BlogPost as BlogPostType } from "@/lib/blog";
+import { deletePost } from "@/actions/blog";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface BlogPostProps {
   post: BlogPostType;
+  isOwner?: boolean;
 }
 
-export default function BlogPost({ post }: BlogPostProps) {
+export default function BlogPost({ post, isOwner }: BlogPostProps) {
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const formattedDate = new Date(post.createdAt).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      const result = await deletePost(post.id);
+      if (result.success) {
+        router.push("/blog");
+        router.refresh();
+      } else {
+        alert("Failed to delete post");
+        setIsDeleting(false);
+      }
+    } catch {
+      alert("Something went wrong");
+      setIsDeleting(false);
+    }
+  };
 
   const coverImageUrl = getImageUrl(post.coverImage ?? undefined);
 
@@ -68,33 +103,62 @@ export default function BlogPost({ post }: BlogPostProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="flex items-center gap-4 mb-8"
+          className="flex items-center justify-between mb-8"
         >
-          <Avatar
-            className="h-12 w-12 ring-2 ring-offset-2 ring-offset-transparent"
-            style={{
-              // @ts-expect-error CSS custom properties
-              "--tw-ring-color": "var(--accent)",
-            }}
-          >
-            <AvatarImage src={post.author.image ?? undefined} />
-            <AvatarFallback
+          <div className="flex items-center gap-4">
+            <Avatar
+              className="h-12 w-12 ring-2 ring-offset-2 ring-offset-transparent"
               style={{
-                backgroundColor: "var(--accent)",
-                color: "var(--bg-primary)",
+                // @ts-expect-error CSS custom properties
+                "--tw-ring-color": "var(--accent)",
               }}
             >
-              {post.author.name?.charAt(0)?.toUpperCase() || "?"}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="font-medium" style={{ color: "var(--text-primary)" }}>
-              {post.author.name || "Anonymous"}
-            </p>
-            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              {formattedDate}
-            </p>
+              <AvatarImage src={post.author.image ?? undefined} />
+              <AvatarFallback
+                style={{
+                  backgroundColor: "var(--accent)",
+                  color: "var(--bg-primary)",
+                }}
+              >
+                {post.author.name?.charAt(0)?.toUpperCase() || "?"}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="font-medium" style={{ color: "var(--text-primary)" }}>
+                {post.author.name || "Anonymous"}
+              </p>
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+                {formattedDate}
+              </p>
+            </div>
           </div>
+
+          {/* Delete Button (Owner Only) */}
+          {isOwner && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm" disabled={isDeleting}>
+                  {isDeleting ? "Deleting..." : "Delete Post"}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="bg-[var(--bg-primary)] border-[var(--bg-secondary)] text-[var(--text-primary)]">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-[var(--text-primary)]">Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription className="text-[var(--text-secondary)]">
+                    This action cannot be undone. This will permanently delete your post and remove it from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="bg-transparent border-[var(--bg-secondary)] text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete} className="bg-red-500 text-white hover:bg-red-600 border-0">
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </motion.div>
 
         <Separator className="mb-8" style={{ backgroundColor: "var(--bg-secondary)" }} />
