@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { stripCdnBaseUrl } from "@/lib/cdn";
@@ -58,6 +58,7 @@ export async function createPost(formData: FormData): Promise<CreatePostResult> 
     // Targeted revalidation
     revalidatePath("/blog");
     revalidatePath(`/blog/${slug}`);
+    revalidateTag("published-posts", { expire: 0 }); // Immediately expire cache
 
     return { success: true, slug };
   } catch (error) {
@@ -113,6 +114,7 @@ export async function updatePost(postId: string, formData: FormData): Promise<Up
     // Targeted revalidation
     revalidatePath("/blog");
     revalidatePath(`/blog/${post.slug}`);
+    revalidateTag("published-posts", { expire: 0 });
 
     return { success: true };
   } catch (error) {
@@ -150,6 +152,7 @@ export async function deletePost(postId: string): Promise<UpdatePostResult> {
 
     // Targeted revalidation
     revalidatePath("/blog");
+    revalidateTag("published-posts", { expire: 0 });
 
     return { success: true };
   } catch (error) {

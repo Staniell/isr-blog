@@ -49,6 +49,7 @@ export default function BlogList({ posts }: BlogListProps) {
 
         {posts.length > 0 ? (
           <motion.div
+            key={posts.map((p) => p.id).join(",")}
             variants={container}
             initial="hidden"
             animate="show"

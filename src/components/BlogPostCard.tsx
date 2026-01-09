@@ -53,10 +53,12 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
           {/* Placeholder when no image */}
           {!coverImageUrl && (
             <div
-              className="h-48 flex items-center justify-center"
-              style={{ backgroundColor: "var(--accent)", opacity: 0.1 }}
+              className="h-48 flex items-center justify-center relative overflow-hidden"
+              style={{
+                background: `linear-gradient(135deg, var(--accent) 0%, var(--bg-secondary) 100%)`,
+              }}
             >
-              <span className="text-6xl">📝</span>
+              <span className="text-6xl opacity-30">📝</span>
             </div>
           )}
 
