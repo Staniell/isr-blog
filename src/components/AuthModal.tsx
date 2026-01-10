@@ -66,31 +66,31 @@ export default function AuthModal({ defaultTab = "login" }: { defaultTab?: "logi
           variant={defaultTab === "signup" ? "default" : "ghost"}
           className={
             defaultTab === "signup"
-              ? "bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-white border-0"
-              : "text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]"
+              ? "bg-accent hover:bg-accent/90 text-white border-0"
+              : "text-(--text-primary) hover:bg-(--bg-secondary) hover:text-(--text-primary)"
           }
         >
           {defaultTab === "signup" ? "Sign Up" : "Log In"}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-[var(--bg-primary)] border-[var(--bg-secondary)] text-[var(--text-primary)]">
+      <DialogContent className="sm:max-w-[425px] bg-(--bg-primary) border-(--bg-secondary) text-(--text-primary)">
         <DialogHeader>
           <DialogTitle>Authentication</DialogTitle>
-          <DialogDescription className="text-[var(--text-secondary)]">
+          <DialogDescription className="text-(--text-secondary)">
             Sign in to your account or create a new one.
           </DialogDescription>
         </DialogHeader>
         <Tabs defaultValue={defaultTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-[var(--bg-secondary)]">
+          <TabsList className="grid w-full grid-cols-2 bg-(--bg-secondary)">
             <TabsTrigger
               value="login"
-              className="data-[state=active]:bg-[var(--bg-primary)] data-[state=active]:text-[var(--text-primary)] text-[var(--text-secondary)]"
+              className="data-[state=active]:bg-(--bg-primary) data-[state=active]:text-(--text-primary) text-(--text-secondary)"
             >
               Log In
             </TabsTrigger>
             <TabsTrigger
               value="signup"
-              className="data-[state=active]:bg-[var(--bg-primary)] data-[state=active]:text-[var(--text-primary)] text-[var(--text-secondary)]"
+              className="data-[state=active]:bg-(--bg-primary) data-[state=active]:text-(--text-primary) text-(--text-secondary)"
             >
               Sign Up
             </TabsTrigger>
@@ -100,7 +100,7 @@ export default function AuthModal({ defaultTab = "login" }: { defaultTab?: "logi
           <TabsContent value="login">
             <form onSubmit={handleCredentialsLogin} className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-[var(--text-primary)]">
+                <Label htmlFor="email" className="text-(--text-primary)">
                   Email
                 </Label>
                 <Input
@@ -109,12 +109,12 @@ export default function AuthModal({ defaultTab = "login" }: { defaultTab?: "logi
                   placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
+                  className="bg-(--bg-secondary) border-transparent text-(--text-primary) placeholder:text-(--text-secondary)"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-[var(--text-primary)]">
+                <Label htmlFor="password" title="Password" className="text-(--text-primary)">
                   Password
                 </Label>
                 <Input
@@ -122,29 +122,25 @@ export default function AuthModal({ defaultTab = "login" }: { defaultTab?: "logi
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)]"
+                  className="bg-(--bg-secondary) border-transparent text-(--text-primary)"
                   required
                 />
               </div>
-              <Button
-                type="submit"
-                className="w-full bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-white"
-                disabled={isLoading}
-              >
+              <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-white" disabled={isLoading}>
                 {isLoading ? "Loading..." : "Log In with Email"}
               </Button>
             </form>
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-[var(--bg-secondary)]" />
+                <span className="w-full border-t border-(--bg-secondary)" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-[var(--bg-primary)] px-2 text-[var(--text-secondary)]">Or continue with</span>
+                <span className="bg-(--bg-primary) px-2 text-(--text-secondary)">Or continue with</span>
               </div>
             </div>
             <Button
               variant="outline"
-              className="w-full border-[var(--bg-secondary)] hover:bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+              className="w-full bg-(--bg-primary) border-(--bg-secondary) hover:bg-(--bg-secondary) text-(--text-primary)"
               onClick={handleGoogleLogin}
               disabled={isLoading}
             >
@@ -174,7 +170,7 @@ export default function AuthModal({ defaultTab = "login" }: { defaultTab?: "logi
           <TabsContent value="signup">
             <form onSubmit={handleSignup} className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="signup-email" className="text-[var(--text-primary)]">
+                <Label htmlFor="signup-email" className="text-(--text-primary)">
                   Email
                 </Label>
                 <Input
@@ -183,12 +179,12 @@ export default function AuthModal({ defaultTab = "login" }: { defaultTab?: "logi
                   placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
+                  className="bg-(--bg-secondary) border-transparent text-(--text-primary) placeholder:text-(--text-secondary)"
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="signup-password" className="text-[var(--text-primary)]">
+                <Label htmlFor="signup-password" className="text-(--text-primary)">
                   Password
                 </Label>
                 <Input
@@ -196,29 +192,25 @@ export default function AuthModal({ defaultTab = "login" }: { defaultTab?: "logi
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-[var(--bg-secondary)] border-transparent text-[var(--text-primary)]"
+                  className="bg-(--bg-secondary) border-transparent text-(--text-primary)"
                   required
                 />
               </div>
-              <Button
-                type="submit"
-                className="w-full bg-[var(--accent)] hover:bg-[var(--accent)]/90 text-white"
-                disabled={isLoading}
-              >
+              <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-white" disabled={isLoading}>
                 {isLoading ? "Loading..." : "Sign Up with Email"}
               </Button>
             </form>
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-[var(--bg-secondary)]" />
+                <span className="w-full border-t border-(--bg-secondary)" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-[var(--bg-primary)] px-2 text-[var(--text-secondary)]">Or continue with</span>
+                <span className="bg-(--bg-primary) px-2 text-(--text-secondary)">Or continue with</span>
               </div>
             </div>
             <Button
               variant="outline"
-              className="w-full border-[var(--bg-secondary)] hover:bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+              className="w-full bg-(--bg-primary) border-(--bg-secondary) hover:bg-(--bg-secondary) text-(--text-primary)"
               onClick={handleGoogleLogin}
               disabled={isLoading}
             >

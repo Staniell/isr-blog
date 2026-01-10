@@ -34,9 +34,7 @@ export default function ThemeSwitcher() {
 
   // Prevent hydration mismatch
   if (!mounted) {
-    return (
-      <div className="w-[130px] h-10 rounded-md animate-pulse" style={{ backgroundColor: "var(--bg-secondary)" }} />
-    );
+    return <div className="w-[130px] h-10 rounded-md animate-pulse bg-(--bg-secondary)" />;
   }
 
   const currentTheme = THEMES.find((t) => t.value === theme);
@@ -44,27 +42,15 @@ export default function ThemeSwitcher() {
   return (
     <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
       <Select value={theme} onValueChange={handleChange}>
-        <SelectTrigger
-          className="w-[130px]"
-          style={{
-            backgroundColor: "var(--bg-secondary)",
-            color: "var(--text-primary)",
-            borderColor: "var(--accent)",
-          }}
-        >
+        <SelectTrigger className="w-[130px] bg-(--bg-secondary) text-(--text-primary) border-(--accent)">
           <SelectValue>
             {currentTheme?.icon} {currentTheme?.value.charAt(0).toUpperCase()}
             {currentTheme?.value.slice(1)}
           </SelectValue>
         </SelectTrigger>
-        <SelectContent
-          style={{
-            backgroundColor: "var(--bg-secondary)",
-            borderColor: "var(--accent)",
-          }}
-        >
+        <SelectContent className="bg-(--bg-secondary) border-(--accent)">
           {THEMES.map((t) => (
-            <SelectItem key={t.value} value={t.value} style={{ color: "var(--text-primary)" }}>
+            <SelectItem key={t.value} value={t.value} className="text-(--text-primary)">
               {t.label}
             </SelectItem>
           ))}

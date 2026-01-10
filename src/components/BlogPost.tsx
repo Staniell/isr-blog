@@ -57,7 +57,7 @@ export default function BlogPost({ post, isOwner }: BlogPostProps) {
   const coverImageUrl = getImageUrl(post.coverImage ?? undefined);
 
   return (
-    <article className="min-h-screen" style={{ backgroundColor: "var(--bg-primary)" }}>
+    <article className="min-h-screen bg-(--bg-primary)">
       {/* Hero Section with Cover Image */}
       {coverImageUrl && (
         <motion.div
@@ -67,7 +67,7 @@ export default function BlogPost({ post, isOwner }: BlogPostProps) {
           className="relative h-[50vh] md:h-[60vh] w-full overflow-hidden"
         >
           <img src={coverImageUrl} alt={post.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
 
           {/* Title overlay */}
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 lg:p-16">
@@ -91,8 +91,7 @@ export default function BlogPost({ post, isOwner }: BlogPostProps) {
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-3xl md:text-5xl font-bold mb-6"
-            style={{ color: "var(--text-primary)" }}
+            className="text-3xl md:text-5xl font-bold mb-6 text-(--text-primary)"
           >
             {post.title}
           </motion.h1>
@@ -106,30 +105,15 @@ export default function BlogPost({ post, isOwner }: BlogPostProps) {
           className="flex items-center justify-between mb-8"
         >
           <div className="flex items-center gap-4">
-            <Avatar
-              className="h-12 w-12 ring-2 ring-offset-2 ring-offset-transparent"
-              style={{
-                // @ts-expect-error CSS custom properties
-                "--tw-ring-color": "var(--accent)",
-              }}
-            >
+            <Avatar className="h-12 w-12 ring-2 ring-offset-2 ring-offset-transparent ring-accent">
               <AvatarImage src={post.author.image ?? undefined} />
-              <AvatarFallback
-                style={{
-                  backgroundColor: "var(--accent)",
-                  color: "var(--bg-primary)",
-                }}
-              >
+              <AvatarFallback className="bg-accent text-(--bg-primary)">
                 {post.author.name?.charAt(0)?.toUpperCase() || "?"}
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium" style={{ color: "var(--text-primary)" }}>
-                {post.author.name || "Anonymous"}
-              </p>
-              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                {formattedDate}
-              </p>
+              <p className="font-medium text-(--text-primary)">{post.author.name || "Anonymous"}</p>
+              <p className="text-sm text-(--text-secondary)">{formattedDate}</p>
             </div>
           </div>
 
@@ -141,15 +125,15 @@ export default function BlogPost({ post, isOwner }: BlogPostProps) {
                   {isDeleting ? "Deleting..." : "Delete Post"}
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="bg-[var(--bg-primary)] border-[var(--bg-secondary)] text-[var(--text-primary)]">
+              <AlertDialogContent className="bg-(--bg-primary) border-(--bg-secondary) text-(--text-primary)">
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="text-[var(--text-primary)]">Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription className="text-[var(--text-secondary)]">
+                  <AlertDialogTitle className="text-(--text-primary)">Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription className="text-(--text-secondary)">
                     This action cannot be undone. This will permanently delete your post and remove it from our servers.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel className="bg-transparent border-[var(--bg-secondary)] text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]">
+                  <AlertDialogCancel className="bg-transparent border-(--bg-secondary) text-(--text-primary) hover:bg-(--bg-secondary) hover:text-(--text-primary)">
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction onClick={handleDelete} className="bg-red-500 text-white hover:bg-red-600 border-0">
@@ -161,7 +145,7 @@ export default function BlogPost({ post, isOwner }: BlogPostProps) {
           )}
         </motion.div>
 
-        <Separator className="mb-8" style={{ backgroundColor: "var(--bg-secondary)" }} />
+        <Separator className="mb-8 bg-(--bg-secondary)" />
 
         {/* Excerpt */}
         {post.excerpt && (
@@ -169,8 +153,7 @@ export default function BlogPost({ post, isOwner }: BlogPostProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 }}
-            className="text-xl md:text-2xl mb-8 leading-relaxed font-light italic"
-            style={{ color: "var(--text-secondary)" }}
+            className="text-xl md:text-2xl mb-8 leading-relaxed font-light italic text-(--text-secondary)"
           >
             {post.excerpt}
           </motion.p>
@@ -181,18 +164,11 @@ export default function BlogPost({ post, isOwner }: BlogPostProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="prose prose-lg max-w-none"
-          style={{
-            color: "var(--text-primary)",
-            // @ts-expect-error CSS custom properties
-            "--tw-prose-body": "var(--text-primary)",
-            "--tw-prose-headings": "var(--text-primary)",
-            "--tw-prose-links": "var(--accent)",
-          }}
+          className="prose prose-lg max-w-none text-(--text-primary) [--tw-prose-body:var(--text-primary)] [--tw-prose-headings:var(--text-primary)] [--tw-prose-links:var(--accent)]"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
-        <Separator className="my-12" style={{ backgroundColor: "var(--bg-secondary)" }} />
+        <Separator className="my-12 bg-(--bg-secondary)" />
 
         {/* Back Button */}
         <motion.div
@@ -205,10 +181,10 @@ export default function BlogPost({ post, isOwner }: BlogPostProps) {
             <Button
               variant="outline"
               size="lg"
-              className="group px-8 bg-transparent border-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--accent)] hover:bg-[var(--bg-secondary)] transition-all duration-300"
+              className="group px-8 bg-transparent border-(--bg-secondary) text-(--text-secondary) hover:text-(--text-primary) hover:border-accent hover:bg-(--bg-secondary) transition-all duration-300"
             >
               <motion.span
-                className="mr-2 inline-block text-[var(--accent)]"
+                className="mr-2 inline-block text-accent"
                 whileHover={{ x: -3 }}
                 transition={{ type: "spring", stiffness: 400 }}
               >

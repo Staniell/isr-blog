@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function BlogListSkeleton() {
   return (
-    <div className="min-h-screen py-12 px-4" style={{ backgroundColor: "var(--bg-primary)" }}>
+    <div className="min-h-screen py-12 px-4 bg-(--bg-primary)">
       <div className="container mx-auto max-w-6xl">
         {/* Title skeleton */}
         <div className="flex flex-col items-center mb-12">
@@ -14,7 +14,7 @@ export default function BlogListSkeleton() {
         {/* Cards grid skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <Card key={i} className="h-full overflow-hidden" style={{ backgroundColor: "var(--bg-secondary)" }}>
+            <Card key={i} className="h-full overflow-hidden bg-(--bg-secondary)">
               {/* Image skeleton */}
               <Skeleton className="h-48 w-full rounded-none" />
 

@@ -25,14 +25,13 @@ interface BlogListProps {
 
 export default function BlogList({ posts }: BlogListProps) {
   return (
-    <div className="min-h-screen py-12 px-4" style={{ backgroundColor: "var(--bg-primary)" }}>
+    <div className="min-h-screen py-12 px-4 bg-(--bg-primary)">
       <div className="container mx-auto max-w-6xl">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-4xl md:text-5xl font-bold mb-4 text-center"
-          style={{ color: "var(--text-primary)" }}
+          className="text-4xl md:text-5xl font-bold mb-4 text-center text-(--text-primary)"
         >
           Blog
         </motion.h1>
@@ -41,8 +40,7 @@ export default function BlogList({ posts }: BlogListProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-lg text-center mb-12 max-w-2xl mx-auto"
-          style={{ color: "var(--text-secondary)" }}
+          className="text-lg text-center mb-12 max-w-2xl mx-auto text-(--text-secondary)"
         >
           Thoughts, stories, and ideas
         </motion.p>
@@ -68,10 +66,8 @@ export default function BlogList({ posts }: BlogListProps) {
             transition={{ delay: 0.3 }}
             className="text-center py-16"
           >
-            <p className="text-xl mb-4" style={{ color: "var(--text-secondary)" }}>
-              No posts yet
-            </p>
-            <p style={{ color: "var(--text-secondary)" }}>Check back soon for new content!</p>
+            <p className="text-xl mb-4 text-(--text-secondary)">No posts yet</p>
+            <p className="text-(--text-secondary)">Check back soon for new content!</p>
           </motion.div>
         )}
       </div>
